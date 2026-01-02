@@ -1,9 +1,10 @@
 import React, { FC, memo } from 'react';
 import styles from './ingredient-details.module.css';
 import { IngredientDetailsUIProps } from './type';
+import { AddButton } from '@zlden/react-developer-burger-ui-components';
 
 export const IngredientDetailsUI: FC<IngredientDetailsUIProps> = memo(
-  ({ ingredientData }) => {
+  ({ ingredientData, onAddClick }) => {
     const { name, image_large, calories, proteins, fat, carbohydrates } =
       ingredientData;
 
@@ -33,6 +34,11 @@ export const IngredientDetailsUI: FC<IngredientDetailsUIProps> = memo(
             <p className={`text text_type_digits-default`}>{carbohydrates}</p>
           </li>
         </ul>
+        {onAddClick && (
+          <div className={styles.addButton}>
+            <AddButton text='Добавить в заказ' onClick={onAddClick} />
+          </div>
+        )}
       </div>
     );
   }

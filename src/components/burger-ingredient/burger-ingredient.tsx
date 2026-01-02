@@ -1,22 +1,41 @@
-import { FC, memo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { FC } from 'react';
+import { BurgerIngredientUI } from '../ui/burger-ingredient/burger-ingredient';
+import { TIngredient } from '@utils-types';
 
-import { BurgerIngredientUI } from '@ui';
-import { TBurgerIngredientProps } from './type';
+export type TBurgerIngredientProps = {
+  ingredient: TIngredient;
+  count?: number;
+  onIngredientClick?: (ingredient: TIngredient) => void;
+  onAddIngredient?: (ingredient: TIngredient) => void;
+};
 
-export const BurgerIngredient: FC<TBurgerIngredientProps> = memo(
-  ({ ingredient, count }) => {
-    const location = useLocation();
+export const BurgerIngredient: FC<TBurgerIngredientProps> = ({
+  ingredient,
+  count,
+  onIngredientClick,
+  onAddIngredient
+}) => {
+  const handleAdd = () => {
+    if (onAddIngredient) {
+      onAddIngredient(ingredient);
+    }
+  };
 
-    const handleAdd = () => {};
+  const handleClick = () => {
+    if (onIngredientClick) {
+      onIngredientClick(ingredient);
+    }
+  };
 
-    return (
-      <BurgerIngredientUI
-        ingredient={ingredient}
-        count={count}
-        locationState={{ background: location }}
-        handleAdd={handleAdd}
-      />
-    );
-  }
-);
+  const locationState = { modal: true };
+
+  return (
+    <BurgerIngredientUI
+      ingredient={ingredient}
+      count={count}
+      handleAdd={handleAdd}
+      locationState={locationState}
+      onClick={handleClick}
+    />
+  );
+};

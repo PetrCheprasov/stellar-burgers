@@ -1,18 +1,29 @@
 import React, { FC, memo } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './burger-ingredient.module.css';
-
 import {
   Counter,
   CurrencyIcon,
   AddButton
 } from '@zlden/react-developer-burger-ui-components';
-
 import { TBurgerIngredientUIProps } from './type';
 
 export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
-  ({ ingredient, count, handleAdd, locationState }) => {
+  ({ ingredient, count, handleAdd, locationState, onClick }) => {
     const { image, price, name, _id } = ingredient;
+
+    const handleLinkClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      if (onClick) {
+        onClick();
+      }
+    };
+
+    const handleButtonClick = () => {
+      if (handleAdd) {
+        handleAdd();
+      }
+    };
 
     return (
       <li className={styles.container}>
@@ -20,6 +31,7 @@ export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
           className={styles.article}
           to={`/ingredients/${_id}`}
           state={locationState}
+          onClick={handleLinkClick}
         >
           {count && <Counter count={count} />}
           <img className={styles.img} src={image} alt='картинка ингредиента.' />
@@ -31,7 +43,7 @@ export const BurgerIngredientUI: FC<TBurgerIngredientUIProps> = memo(
         </Link>
         <AddButton
           text='Добавить'
-          onClick={handleAdd}
+          onClick={handleButtonClick}
           extraClass={`${styles.addButton} mt-8`}
         />
       </li>
