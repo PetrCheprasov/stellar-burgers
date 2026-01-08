@@ -1,13 +1,16 @@
-import { FC, SyntheticEvent, useState, useEffect } from 'react';
+import { FC, SyntheticEvent, useEffect } from 'react';
 import { LoginUI } from '@ui-pages';
 import { useDispatch, useSelector } from '../../services/store';
 import { login, clearError } from '../../services/slices/auth-slice';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Preloader } from '@ui';
+import { useForm } from '../../hooks/useForm';
 
 export const Login: FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { values, handleChange } = useForm({
+    email: '',
+    password: ''
+  });
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,7 +20,6 @@ export const Login: FC = () => {
   const from = location.state?.from || { pathname: '/' };
 
   useEffect(() => {
-    // Если пользователь уже авторизован, редиректим
     if (user) {
       navigate(from);
     }
@@ -26,14 +28,13 @@ export const Login: FC = () => {
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
 
-    if (!email || !password) {
+    if (!values.email || !values.password) {
       return;
     }
 
-    dispatch(login({ email, password }))
+    dispatch(login({ email: values.email, password: values.password }))
       .unwrap()
       .then(() => {
-        // Навигация произойдет автоматически благодаря useEffect
         console.log('Login successful');
       })
       .catch((error) => {
@@ -41,24 +42,43 @@ export const Login: FC = () => {
       });
   };
 
-  // Очищаем ошибку при размонтировании
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       dispatch(clearError());
-    };
-  }, [dispatch]);
+    },
+    [dispatch]
+  );
 
   if (isLoading) {
     return <Preloader />;
   }
 
+  const handleEmailChange: React.Dispatch<React.SetStateAction<string>> = (
+    value
+  ) => {
+    const nextValue = typeof value === 'function' ? value(values.email) : value;
+    handleChange({
+      target: { name: 'email', value: nextValue }
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
+  const handlePasswordChange: React.Dispatch<React.SetStateAction<string>> = (
+    value
+  ) => {
+    const nextValue =
+      typeof value === 'function' ? value(values.password) : value;
+    handleChange({
+      target: { name: 'password', value: nextValue }
+    } as React.ChangeEvent<HTMLInputElement>);
+  };
+
   return (
     <LoginUI
       errorText={error || ''}
-      email={email}
-      setEmail={setEmail}
-      password={password}
-      setPassword={setPassword}
+      email={values.email}
+      setEmail={handleEmailChange}
+      password={values.password}
+      setPassword={handlePasswordChange}
       handleSubmit={handleSubmit}
     />
   );

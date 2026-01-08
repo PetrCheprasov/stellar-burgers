@@ -1,4 +1,10 @@
-import { Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+  Navigate
+} from 'react-router-dom';
 import { ConstructorPage } from '@pages';
 import '../../index.css';
 import styles from './app.module.css';
@@ -6,6 +12,7 @@ import { AppHeader } from '@components';
 import { useEffect } from 'react';
 import { useDispatch } from '../../services/store';
 import { checkUserAuth } from '../../services/slices/auth-slice';
+import { fetchIngredients } from '../../services/ingredients/ingredients-slice';
 
 import { Feed } from '../../pages/feed/feed';
 import { Login } from '../../pages/login/login';
@@ -29,11 +36,12 @@ const App = () => {
   const background = location.state?.background;
 
   const handleModalClose = () => {
-    navigate(-1);
+    navigate(background?.pathname || '/');
   };
 
   useEffect(() => {
     dispatch(checkUserAuth());
+    dispatch(fetchIngredients());
   }, [dispatch]);
 
   return (
@@ -99,14 +107,14 @@ const App = () => {
         />
 
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
-      
-        <Route path='/feed/:number' element={<Navigate to="/feed" replace />} />
-        
+
+        <Route path='/feed/:number' element={<OrderInfo />} />
+
         <Route
           path='/profile/orders/:number'
           element={
             <ProtectedRoute>
-              <Navigate to="/profile/orders" replace />
+              <OrderInfo />
             </ProtectedRoute>
           }
         />

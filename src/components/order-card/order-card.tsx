@@ -10,26 +10,26 @@ const maxIngredients = 6;
 export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   const ingredients = useSelector((state) => state.ingredients.items);
-  
+
   const handleCardClick = () => {
     if (location.pathname.startsWith('/feed')) {
-      navigate(`/feed/${order.number}`, { 
-        state: { background: location } 
+      navigate(`/feed/${order.number}`, {
+        state: { background: location }
       });
     } else if (location.pathname.startsWith('/profile/orders')) {
-      navigate(`/profile/orders/${order.number}`, { 
-        state: { background: location } 
+      navigate(`/profile/orders/${order.number}`, {
+        state: { background: location }
       });
     }
   };
-  
+
   const orderInfo = useMemo(() => {
     if (!ingredients || ingredients.length === 0) {
       return null;
     }
-    
+
     const ingredientsInfo = order.ingredients.reduce(
       (acc: TIngredient[], item: string) => {
         const ingredient = ingredients.find((ing) => ing._id === item);
@@ -44,11 +44,12 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
 
     const total = ingredientsInfo.reduce((acc, item) => acc + item.price, 0);
     const ingredientsToShow = ingredientsInfo.slice(0, maxIngredients);
-    const remains = ingredientsInfo.length > maxIngredients 
-      ? ingredientsInfo.length - maxIngredients 
-      : 0;
+    const remains =
+      ingredientsInfo.length > maxIngredients
+        ? ingredientsInfo.length - maxIngredients
+        : 0;
     const date = new Date(order.createdAt);
-    
+
     return {
       ...order,
       ingredientsInfo,
@@ -61,11 +62,11 @@ export const OrderCard: FC<OrderCardProps> = memo(({ order }) => {
 
   if (!orderInfo) {
     return (
-      <div 
+      <div
         onClick={handleCardClick}
-        style={{ 
-          border: '1px solid #4C4CFF', 
-          padding: '15px', 
+        style={{
+          border: '1px solid #4C4CFF',
+          padding: '15px',
           margin: '10px',
           borderRadius: '10px',
           backgroundColor: '#1C1C21',

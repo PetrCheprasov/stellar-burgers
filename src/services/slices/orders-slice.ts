@@ -31,9 +31,11 @@ export const fetchUserOrders = createAsyncThunk(
         return sortedOrders;
       }
       return [];
-    } catch (error: any) {
+    } catch (error) {
       console.error('fetchUserOrders error:', error);
-      return rejectWithValue(error.message || 'Ошибка загрузки заказов');
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка загрузки заказов';
+      return rejectWithValue(errorMessage);
     }
   }
 );

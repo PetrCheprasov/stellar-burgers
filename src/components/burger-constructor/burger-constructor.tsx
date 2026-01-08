@@ -60,7 +60,7 @@ export const BurgerConstructor: FC = () => {
           dispatch(fetchUserOrders());
         }, 1000);
       })
-      .catch((error: any) => {
+      .catch((error) => {
         console.error('Ошибка при создании заказа:', error);
       });
   };

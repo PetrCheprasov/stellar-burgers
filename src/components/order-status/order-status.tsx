@@ -22,4 +22,4 @@ export const OrderStatus: FC<OrderStatusProps> = ({ status }) => {
   }
 
   return <OrderStatusUI textStyle={textStyle} text={statusText[status]} />;
-}
+};

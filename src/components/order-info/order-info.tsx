@@ -1,24 +1,48 @@
-import { FC, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
-import { useSelector } from '../../services/store';
+import { FC, useMemo, useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from '../../services/store';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { fetchIngredients } from '../../services/ingredients/ingredients-slice';
+import { fetchFeeds } from '../../services/slices/feed-slice';
+import { fetchUserOrders } from '../../services/slices/orders-slice';
 
 export const OrderInfo: FC = () => {
   const { number } = useParams<{ number: string }>();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
   const feedOrders = useSelector((state) => state.feed.orders);
   const userOrders = useSelector((state) => state.orders.orders);
-
   const ingredients = useSelector((state) => state.ingredients.items);
+  const isLoadingFeed = useSelector((state) => state.feed.isLoading);
+  const isLoadingOrders = useSelector((state) => state.orders.isLoading);
+  const isLoadingIngredients = useSelector(
+    (state) => state.ingredients.loading
+  );
 
-  console.log('OrderInfo debug:', {
-    orderNumber: number,
-    feedOrdersCount: feedOrders.length,
-    userOrdersCount: userOrders.length,
-    totalIngredients: ingredients.length
-  });
+  useEffect(() => {
+    if (ingredients.length === 0 && !isLoadingIngredients) {
+      dispatch(fetchIngredients());
+    }
+  }, [dispatch, ingredients.length, isLoadingIngredients]);
+
+  useEffect(() => {
+    const isFeedRoute = location.pathname.startsWith('/feed');
+    if (isFeedRoute && feedOrders.length === 0 && !isLoadingFeed) {
+      dispatch(fetchFeeds());
+    } else if (!isFeedRoute && userOrders.length === 0 && !isLoadingOrders) {
+      dispatch(fetchUserOrders());
+    }
+  }, [
+    dispatch,
+    location.pathname,
+    feedOrders.length,
+    userOrders.length,
+    isLoadingFeed,
+    isLoadingOrders
+  ]);
 
   const orderData = useMemo(() => {
     if (!number) return null;
@@ -26,22 +50,17 @@ export const OrderInfo: FC = () => {
     const orderNumber = parseInt(number);
     if (isNaN(orderNumber)) return null;
 
-    let order = feedOrders.find(o => o.number === orderNumber);
+    let order = feedOrders.find((o) => o.number === orderNumber);
 
     if (!order) {
-      order = userOrders.find(o => o.number === orderNumber);
+      order = userOrders.find((o) => o.number === orderNumber);
     }
 
-    console.log('Found order:', order);
     return order;
   }, [number, feedOrders, userOrders]);
 
   const orderInfo = useMemo(() => {
     if (!orderData || !ingredients.length) {
-      console.log('Cannot prepare orderInfo:', {
-        hasOrderData: !!orderData,
-        hasIngredients: ingredients.length > 0
-      });
       return null;
     }
 
@@ -60,9 +79,6 @@ export const OrderInfo: FC = () => {
               ...ingredient,
               count: 1
             };
-            console.log(`Found ingredient: ${ingredient.name} for ID: ${item}`);
-          } else {
-            console.log(`Ingredient not found: ${item}`);
           }
         } else {
           acc[item].count++;
@@ -78,12 +94,6 @@ export const OrderInfo: FC = () => {
       0
     );
 
-    console.log('OrderInfo prepared:', {
-      orderNumber: orderData.number,
-      ingredientsCount: Object.keys(ingredientsInfo).length,
-      total
-    });
-
     return {
       ...orderData,
       ingredientsInfo,
@@ -92,11 +102,9 @@ export const OrderInfo: FC = () => {
     };
   }, [orderData, ingredients]);
 
-  if (!orderInfo) {
-    console.log('Showing preloader - orderInfo not ready');
+  if (isLoadingFeed || isLoadingOrders || isLoadingIngredients || !orderInfo) {
     return <Preloader />;
   }
 
-  console.log('Rendering OrderInfoUI with order #', orderInfo.number);
   return <OrderInfoUI orderInfo={orderInfo} />;
-}
+};

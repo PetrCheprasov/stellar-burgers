@@ -34,9 +34,13 @@ export const fetchFeeds = createAsyncThunk(
         };
       }
       return rejectWithValue('Неверный формат ответа');
-    } catch (error: any) {
+    } catch (error) {
       console.error('fetchFeeds error:', error);
-      return rejectWithValue(error.message || 'Ошибка загрузки ленты заказов');
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : 'Ошибка загрузки ленты заказов';
+      return rejectWithValue(errorMessage);
     }
   }
 );

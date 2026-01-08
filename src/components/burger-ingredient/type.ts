@@ -1,9 +1,13 @@
 import { TIngredient } from '@utils-types';
 
-export type TBurgerIngredientUIProps = {
+export type LocationState = {
+  background?: Location;
+  modal?: boolean;
+};
+
+export type TBurgerIngredientProps = {
   ingredient: TIngredient;
   count?: number;
-  handleAdd: (e: React.MouseEvent) => void;
-  locationState: any;
-  onClick?: (e: React.MouseEvent) => void;
+  onIngredientClick?: (ingredient: TIngredient) => void;
+  onAddIngredient?: (ingredient: TIngredient) => void;
 };

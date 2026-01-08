@@ -19,8 +19,8 @@ export const FeedInfo: FC<FeedInfoProps> = ({ orders, total, totalToday }) => {
   const pendingOrders = getOrders(orders, 'pending');
 
   return (
-    <FeedInfoUI 
-      feed={{ total, totalToday }}
+    <FeedInfoUI
+      feed={{ orders, total, totalToday }}
       readyOrders={readyOrders}
       pendingOrders={pendingOrders}
     />

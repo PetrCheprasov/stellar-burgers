@@ -30,9 +30,11 @@ export const createOrder = createAsyncThunk(
         };
       }
       return rejectWithValue('Ошибка создания заказа');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Order creation error:', error);
-      return rejectWithValue(error.message || 'Ошибка создания заказа');
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка создания заказа';
+      return rejectWithValue(errorMessage);
     }
   }
 );

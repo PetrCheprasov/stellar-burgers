@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { NavLink } from 'react-router-dom';
 import styles from './app-header.module.css';
 import {
   BurgerIcon,
@@ -25,69 +26,53 @@ export const AppHeaderUI: FC<AppHeaderUIProps> = ({
   <header className={styles.header}>
     <nav className={`${styles.menu} p-4`}>
       <div className={styles.menu_part_left}>
-        <button
+        <NavLink
+          to='/'
+          className={({ isActive }) =>
+            `${styles.link} ${isActive ? styles.link_active : ''}`
+          }
           onClick={onConstructorClick}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center'
-          }}
         >
           <BurgerIcon type={'primary'} />
           <span className='text text_type_main-default ml-2 mr-10'>
             Конструктор
           </span>
-        </button>
+        </NavLink>
 
-        <button
+        <NavLink
+          to='/feed'
+          className={({ isActive }) =>
+            `${styles.link} ${isActive ? styles.link_active : ''}`
+          }
           onClick={onFeedClick}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center'
-          }}
         >
           <ListIcon type={'primary'} />
           <span className='text text_type_main-default ml-2'>
             Лента заказов
           </span>
-        </button>
+        </NavLink>
       </div>
 
       <div className={styles.logo}>
-        <button
-          onClick={onConstructorClick}
-          style={{
-            background: 'none',
-            border: 'none',
-            cursor: 'pointer'
-          }}
-        >
+        <NavLink to='/' onClick={onConstructorClick}>
           <Logo className='' />
-        </button>
+        </NavLink>
       </div>
 
       <div className={styles.link_position_last}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-          <button
+          <NavLink
+            to='/profile'
+            className={({ isActive }) =>
+              `${styles.link} ${isActive ? styles.link_active : ''}`
+            }
             onClick={onProfileClick}
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center'
-            }}
           >
             <ProfileIcon type={'primary'} />
             <span className='text text_type_main-default ml-2'>
               {userName || 'Личный кабинет'}
             </span>
-          </button>
+          </NavLink>
 
           {userName && onLogoutClick && (
             <button

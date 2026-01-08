@@ -5,4 +5,4 @@ export type FeedUIProps = {
   handleGetFeeds: () => void;
   total?: number;
   totalToday?: number;
-}
+};

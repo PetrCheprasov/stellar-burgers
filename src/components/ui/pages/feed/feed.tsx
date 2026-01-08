@@ -4,20 +4,8 @@ import { FeedUIProps } from './type';
 import { OrdersList, FeedInfo } from '@components';
 import { RefreshButton } from '@zlden/react-developer-burger-ui-components';
 
-export const FeedUI: FC<FeedUIProps> = memo(({ 
-  orders, 
-  handleGetFeeds,
-  total = 0,
-  totalToday = 0
-}) => {
-  // Добавим проверку для отладки
-  console.log('FeedUI rendering with:', {
-    orders: orders.length,
-    total,
-    totalToday
-  });
-  
-  return (
+export const FeedUI: FC<FeedUIProps> = memo(
+  ({ orders, handleGetFeeds, total = 0, totalToday = 0 }) => (
     <main className={styles.containerMain}>
       <div className={`${styles.titleBox} mt-10 mb-5`}>
         <h1 className={`${styles.title} text text_type_main-large`}>
@@ -38,5 +26,5 @@ export const FeedUI: FC<FeedUIProps> = memo(({
         </div>
       </div>
     </main>
-  );
-})
+  )
+);

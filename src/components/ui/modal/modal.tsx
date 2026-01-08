@@ -6,10 +6,13 @@ import { ModalOverlayUI } from '@ui';
 
 export const ModalUI: FC<TModalUIProps> = memo(
   ({ title, onClose, children }) => {
-    const handleButtonClick = useCallback((e: React.MouseEvent) => {
-      e.stopPropagation();
-      onClose();
-    }, [onClose]);
+    const handleButtonClick = useCallback(
+      (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onClose();
+      },
+      [onClose]
+    );
     const handleModalClick = useCallback((e: React.MouseEvent) => {
       e.stopPropagation();
     }, []);
@@ -21,9 +24,9 @@ export const ModalUI: FC<TModalUIProps> = memo(
             <h3 className={`${styles.title} text text_type_main-large`}>
               {title}
             </h3>
-            <button 
-              className={styles.button} 
-              type='button' 
+            <button
+              className={styles.button}
+              type='button'
               onClick={handleButtonClick}
             >
               <CloseIcon type='primary' />

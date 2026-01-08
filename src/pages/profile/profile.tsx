@@ -1,26 +1,31 @@
 import { ProfileUI } from '@ui-pages';
-import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { FC, SyntheticEvent, useEffect } from 'react';
 import { useSelector, useDispatch } from '../../services/store';
 import { updateUser, clearError } from '../../services/slices/auth-slice';
+import { useForm } from '../../hooks/useForm';
 
 export const Profile: FC = () => {
   const dispatch = useDispatch();
-  // ПРАВИЛЬНАЯ деструктуризация - берем из state.auth, а не из state.auth.user
   const { user, isLoading, error } = useSelector((state) => state.auth);
 
-  const [formValue, setFormValue] = useState({
+  const {
+    values: formValue,
+    handleChange,
+    setValue,
+    setValues
+  } = useForm({
     name: user?.name || '',
     email: user?.email || '',
     password: ''
   });
 
   useEffect(() => {
-    setFormValue((prevState) => ({
-      ...prevState,
+    setValues({
       name: user?.name || '',
-      email: user?.email || ''
-    }));
-  }, [user]);
+      email: user?.email || '',
+      password: ''
+    });
+  }, [user, setValues]);
 
   const isFormChanged =
     formValue.name !== user?.name ||
@@ -29,10 +34,6 @@ export const Profile: FC = () => {
 
   const handleSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    console.log('Profile save clicked');
-    console.log('Form data:', formValue);
-    console.log('User data:', user);
-    console.log('Is form changed:', isFormChanged);
 
     if (!isFormChanged) return;
 
@@ -45,34 +46,22 @@ export const Profile: FC = () => {
     dispatch(updateUser(updateData))
       .unwrap()
       .then(() => {
-        setFormValue((prev) => ({ ...prev, password: '' }));
+        setValue('password', '');
       })
       .catch((err) => {
         console.error('Update failed:', err);
       });
-
-    console.log('handleSubmit - formValue:', formValue);
-    console.log('handleSubmit - user:', user);
-    console.log('handleSubmit - updateData:', updateData);
   };
 
   const handleCancel = (e: SyntheticEvent) => {
     e.preventDefault();
-    setFormValue({
+    setValues({
       name: user?.name || '',
       email: user?.email || '',
       password: ''
     });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValue((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value
-    }));
-  };
-
-  // Можно добавить лоадер если нужно
   if (isLoading) {
     return <div>Загрузка...</div>;
   }
@@ -83,7 +72,7 @@ export const Profile: FC = () => {
       isFormChanged={isFormChanged}
       handleCancel={handleCancel}
       handleSubmit={handleSubmit}
-      handleInputChange={handleInputChange}
+      handleInputChange={handleChange}
     />
   );
 };

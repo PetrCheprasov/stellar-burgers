@@ -36,6 +36,6 @@ export const ProfileOrders: FC = () => {
   }
 
   console.log('Passing', orders.length, 'orders to ProfileOrdersUI');
-  
+
   return <ProfileOrdersUI orders={orders} />;
 };

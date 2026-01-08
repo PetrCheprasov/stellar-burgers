@@ -1,4 +1,3 @@
-// src/pages/feed/feed.tsx (страница)
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { FC, useEffect } from 'react';
@@ -53,8 +52,8 @@ export const Feed: FC = () => {
   }
 
   return (
-    <FeedUI 
-      orders={orders} 
+    <FeedUI
+      orders={orders}
       handleGetFeeds={() => dispatch(fetchFeeds())}
       total={total}
       totalToday={totalToday}

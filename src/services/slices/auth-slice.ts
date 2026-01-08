@@ -53,12 +53,14 @@ export const checkUserAuth = createAsyncThunk(
       const data = await getUserApi();
       console.log('Auth check successful:', data.user);
       return data.user;
-    } catch (error: any) {
+    } catch (error) {
       console.error('Auth check failed:', error);
       deleteCookie('accessToken');
       localStorage.removeItem('refreshToken');
 
-      return rejectWithValue(error.message || 'Ошибка проверки авторизации');
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка проверки авторизации';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -79,9 +81,11 @@ export const register = createAsyncThunk(
       }
 
       return rejectWithValue('Ошибка регистрации');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Registration error:', error);
-      return rejectWithValue(error.message || 'Ошибка регистрации');
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка регистрации';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -110,9 +114,11 @@ export const login = createAsyncThunk(
       }
 
       return rejectWithValue('Ошибка авторизации');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Login error:', error);
-      return rejectWithValue(error.message || 'Ошибка авторизации');
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка авторизации';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -127,11 +133,13 @@ export const logout = createAsyncThunk(
       localStorage.removeItem('refreshToken');
       console.log('Logout successful');
       return null;
-    } catch (error: any) {
+    } catch (error) {
       console.error('Logout error:', error);
       deleteCookie('accessToken');
       localStorage.removeItem('refreshToken');
-      return rejectWithValue(error.message || 'Ошибка выхода');
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка выхода';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -144,9 +152,11 @@ export const updateUser = createAsyncThunk(
       const response = await updateUserApi(data);
       console.log('Update response:', response);
       return response.user;
-    } catch (error: any) {
+    } catch (error) {
       console.error('Update error:', error);
-      return rejectWithValue(error.message || 'Ошибка обновления данных');
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка обновления данных';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -157,8 +167,10 @@ export const forgotPassword = createAsyncThunk(
     try {
       const response = await forgotPasswordApi({ email });
       return response.success;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка восстановления пароля');
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка восстановления пароля';
+      return rejectWithValue(errorMessage);
     }
   }
 );
@@ -169,8 +181,10 @@ export const resetPassword = createAsyncThunk(
     try {
       const response = await resetPasswordApi(data);
       return response.success;
-    } catch (error: any) {
-      return rejectWithValue(error.message || 'Ошибка сброса пароля');
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'Ошибка сброса пароля';
+      return rejectWithValue(errorMessage);
     }
   }
 );
