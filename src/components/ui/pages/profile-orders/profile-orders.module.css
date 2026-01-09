@@ -1,5 +1,7 @@
 .menu {
   width: 320px;
+  margin-right: 60px;
+  margin-top: 80px;
 }
 
 .main {
@@ -7,7 +9,7 @@
   height: 100%;
   width: 1240px;
   overflow: hidden;
-  margin: 0 auto;
+  margin: 40px auto 0;
 }
 
 .orders {

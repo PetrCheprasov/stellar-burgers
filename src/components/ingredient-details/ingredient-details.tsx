@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
@@ -7,7 +7,6 @@ import {
   addBun,
   addIngredient
 } from '../../services/slices/burger-constructor-slice';
-import { fetchIngredients } from '../../services/ingredients/ingredients-slice';
 
 export const IngredientDetails: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,12 +16,6 @@ export const IngredientDetails: FC = () => {
 
   const ingredients = useSelector((store) => store.ingredients.items);
   const isLoading = useSelector((store) => store.ingredients.loading);
-
-  useEffect(() => {
-    if (ingredients.length === 0 && !isLoading) {
-      dispatch(fetchIngredients());
-    }
-  }, [dispatch, ingredients.length, isLoading]);
 
   const ingredientData = ingredients.find(
     (ingredient) => ingredient._id === id
