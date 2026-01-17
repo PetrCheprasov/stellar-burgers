@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from '../../services/store';
 import { Preloader } from '../ui/preloader';
 import { OrderInfoUI } from '../ui/order-info';
 import { TIngredient } from '@utils-types';
+import { fetchIngredients } from '../../services/ingredients/ingredients-slice';
 import { fetchFeeds } from '../../services/slices/feed-slice';
 import { fetchUserOrders } from '../../services/slices/orders-slice';
 
@@ -20,6 +21,12 @@ export const OrderInfo: FC = () => {
   const isLoadingIngredients = useSelector(
     (state) => state.ingredients.loading
   );
+
+  useEffect(() => {
+    if (ingredients.length === 0 && !isLoadingIngredients) {
+      dispatch(fetchIngredients());
+    }
+  }, [dispatch, ingredients.length, isLoadingIngredients]);
 
   useEffect(() => {
     const isFeedRoute = location.pathname.startsWith('/feed');
