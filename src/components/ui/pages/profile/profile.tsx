@@ -15,14 +15,11 @@ export const ProfileUI: FC<ProfileUIProps> = ({
   handleCancel,
   handleInputChange
 }) => (
-  <main className={`${commonStyles.container}`}>
-    <div className={`mt-30 mr-15 ${styles.menu}`}>
+  <main className={`${commonStyles.container} ${styles.profileContainer}`}>
+    <div className={`mr-15 ${styles.menu}`}>
       <ProfileMenu />
     </div>
-    <form
-      className={`mt-30 ${styles.form} ${commonStyles.form}`}
-      onSubmit={handleSubmit}
-    >
+    <form className={styles.form} onSubmit={handleSubmit}>
       <>
         <div className='pb-6'>
           <Input

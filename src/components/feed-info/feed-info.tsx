@@ -1,5 +1,4 @@
 import { FC } from 'react';
-
 import { TOrder } from '@utils-types';
 import { FeedInfoUI } from '../ui/feed-info';
 
@@ -9,20 +8,21 @@ const getOrders = (orders: TOrder[], status: string): number[] =>
     .map((item) => item.number)
     .slice(0, 20);
 
-export const FeedInfo: FC = () => {
-  /** TODO: взять переменные из стора */
-  const orders: TOrder[] = [];
-  const feed = {};
+type FeedInfoProps = {
+  orders: TOrder[];
+  total: number;
+  totalToday: number;
+};
 
+export const FeedInfo: FC<FeedInfoProps> = ({ orders, total, totalToday }) => {
   const readyOrders = getOrders(orders, 'done');
-
   const pendingOrders = getOrders(orders, 'pending');
 
   return (
     <FeedInfoUI
+      feed={{ orders, total, totalToday }}
       readyOrders={readyOrders}
       pendingOrders={pendingOrders}
-      feed={feed}
     />
   );
 };
